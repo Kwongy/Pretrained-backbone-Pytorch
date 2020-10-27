@@ -16,6 +16,17 @@ from torchvision.models.resnet import Bottleneck
 from pretrainedmodels.models.torchvision_models import pretrained_settings
 
 
+"""
+    example:
+    model = get_resnet("resnet50")
+    output:
+    [[b, 256, 1/4, 1/4],
+     [b, 512, 1/8, 1/8],
+     [b, 1024, 1/16, 1/16],
+     [b, 2048, 1/32, 1/32]]
+"""
+
+
 class ResNetEncoder(ResNet):
     def __init__(self, out_channels, depth=4, **kwargs):
         super().__init__(**kwargs)
@@ -207,7 +218,7 @@ resnet_encoders = {
 }
 
 
-def get_encoder(name, weights="imagenet", depth=4):
+def get_resnet(name, weights="imagenet", depth=4):
     Encoder = resnet_encoders[name]["encoder"]
     params = resnet_encoders[name]["params"]
     params.update(depth = depth)
@@ -224,14 +235,10 @@ def get_encoder(name, weights="imagenet", depth=4):
     return encoder
 
 
-def main():
-    model = get_encoder("resnext50_32x4d")
+if __name__ == "__main__":
+    model = get_resnet("resnext50_32x4d")
     image = torch.rand([2, 3, 256, 256])
     result = model(image)
     # print(result)
     for i in result:
         print(i.shape)
-
-
-if __name__ == "__main__":
-    main()
